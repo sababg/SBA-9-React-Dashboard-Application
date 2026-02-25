@@ -1,5 +1,31 @@
 import * as React from "react";
-import type { Task, TaskFormProps } from "../../types";
+import type { FormErrors, Task, TaskFormProps } from "../../types";
+
+const validate = (values: Omit<Task, "id">): FormErrors => {
+  const errors: FormErrors = {};
+
+  if (!values.title) {
+    errors.title = "Title is required!";
+  }
+
+  if (!values.description) {
+    errors.description = "Description is required!";
+  }
+
+  if (!values.dueDate) {
+    errors.dueDate = "Due date is required!";
+  }
+
+  if (!values.priority) {
+    errors.priority = "Priority is required!";
+  }
+
+  if (!values.status) {
+    errors.status = "Status is required!";
+  }
+
+  return errors;
+};
 
 const TaskForm: React.FC<TaskFormProps> = ({
   onAddNewTask,
@@ -12,6 +38,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
     priority: "medium",
     dueDate: "",
   });
+  const [errors, setErrors] = React.useState<FormErrors>({});
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -20,15 +47,31 @@ const TaskForm: React.FC<TaskFormProps> = ({
   ) => {
     const { name, value } = event.target;
 
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+
+    setErrors(validate(updatedFormData));
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onAddNewTask(formData);
-    onAddNewTaskClick();
+
+    setErrors(validate(formData));
+
+    if (!Object.keys(validate(formData)).length) {
+      onAddNewTask(formData);
+      onAddNewTaskClick();
+    }
+  };
+
+  const handleInvalid = (
+    e: React.InvalidEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    e.preventDefault();
+
+    const nextErrors = validate(formData);
+    setErrors(nextErrors);
   };
 
   return (
@@ -37,56 +80,84 @@ const TaskForm: React.FC<TaskFormProps> = ({
         onSubmit={handleSubmit}
         className="flex flex-col items-start justify-start w-[50%] bg-white px-9 py-12 rounded-2xl shadow-2xl gap-5"
       >
-        <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          placeholder="Title"
-          required
-          className="w-full focus:outline-none border border-solid rounded-xl border-Green400 px-2 py-3"
-        />
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={formData.description}
-          onChange={handleChange}
-          required
-          className="w-full focus:outline-none border border-solid rounded-xl border-Green400 px-2 py-3"
-        ></textarea>
-
-        <input
-          type="date"
-          name="dueDate"
-          value={formData.dueDate}
-          onChange={handleChange}
-          required
-          className="w-full focus:outline-none border border-solid rounded-xl border-Green400 px-2 py-3"
-        />
+        <div className="flex flex-col items-start justify-start gap-1 w-full">
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            onInvalid={handleInvalid}
+            placeholder="Title"
+            required
+            className="w-full focus:outline-none border border-solid rounded-xl border-Green400 px-2 py-3"
+          />
+          {errors.title && (
+            <p className="text-Red400 text-sm">{errors.title}</p>
+          )}
+        </div>
+        <div className="flex flex-col items-start justify-start gap-1 w-full">
+          <textarea
+            name="description"
+            placeholder="Description"
+            value={formData.description}
+            onChange={handleChange}
+            onInvalid={handleInvalid}
+            required
+            className="w-full focus:outline-none border border-solid rounded-xl border-Green400 px-2 py-3"
+          ></textarea>
+          {errors.description && (
+            <p className="text-Red400 text-sm">{errors.description}</p>
+          )}
+        </div>
+        <div className="flex flex-col items-start justify-start gap-1 w-full">
+          <input
+            type="date"
+            name="dueDate"
+            value={formData.dueDate}
+            onChange={handleChange}
+            onInvalid={handleInvalid}
+            required
+            className="w-full focus:outline-none border border-solid rounded-xl border-Green400 px-2 py-3"
+          />
+          {errors.dueDate && (
+            <p className="text-Red400 text-sm">{errors.dueDate}</p>
+          )}
+        </div>
         <div className="flex items-center justify-between gap-3.5 w-full">
-          <select
-            required
-            name="priority"
-            value={formData.priority}
-            onChange={handleChange}
-            className="w-full focus:outline-none border border-solid rounded-xl border-Green400 px-2 py-3"
-          >
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-
-          <select
-            required
-            value={formData.status}
-            name="status"
-            onChange={handleChange}
-            className="w-full focus:outline-none border border-solid rounded-xl border-Green400 px-2 py-3"
-          >
-            <option value="pending">Pending</option>
-            <option value="in-progress">In Progress</option>
-            <option value="completed">Completed</option>
-          </select>
+          <div className="flex flex-col items-start justify-start gap-1 w-full">
+            <select
+              required
+              name="priority"
+              value={formData.priority}
+              onChange={handleChange}
+              onInvalid={handleInvalid}
+              className="w-full focus:outline-none border border-solid rounded-xl border-Green400 px-2 py-3"
+            >
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+            {errors.priority && (
+              <p className="text-Red400 text-sm">{errors.priority}</p>
+            )}
+          </div>
+          <div className="flex flex-col items-start justify-start gap-1 w-full">
+            <select
+              required
+              value={formData.status}
+              name="status"
+              onChange={handleChange}
+              onInvalid={handleInvalid}
+              className="w-full focus:outline-none border border-solid rounded-xl border-Green400 px-2 py-3"
+            >
+              <option value="pending">Pending</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+            {errors.status && (
+              <p className="text-Red400 text-sm">{errors.status}</p>
+            )}
+          </div>
         </div>
         <div className="flex items-center justify-between gap-3.5 w-full">
           <button

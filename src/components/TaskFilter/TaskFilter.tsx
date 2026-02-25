@@ -1,4 +1,4 @@
-import type { TaskFilterProps, TaskPriority, TaskStatus } from "../../types";
+import type { PriorityStatus, TaskFilterProps, TaskStatus } from "../../types";
 
 const TaskFilter = ({ onFilterChange }: TaskFilterProps) => {
   const handleChange = (
@@ -8,7 +8,7 @@ const TaskFilter = ({ onFilterChange }: TaskFilterProps) => {
     if (data === "status")
       onFilterChange({ status: e.target.value as TaskStatus });
     else {
-      onFilterChange({ priority: e.target.value as TaskPriority });
+      onFilterChange({ priority: e.target.value as PriorityStatus });
     }
   };
 

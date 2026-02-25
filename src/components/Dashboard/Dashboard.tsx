@@ -73,7 +73,7 @@ const Dashboard: React.FC = () => {
         onClick={() => onAddNewTaskClick()}
         className="bg-white text-black px-3 py-5 mx-4 my-5 cursor-pointer rounded-2xl"
       >
-        Add New Task
+        {isAddNewTask ? "Show Tasks" : "Add New Task"}
       </button>
       <div className="w-full h-[80%] overflow-hidden flex items-center justify-center flex-col">
         {isAddNewTask ? (

@@ -1,5 +1,7 @@
 export type TaskStatus = "pending" | "in-progress" | "completed";
 export type PriorityStatus = "low" | "medium" | "high";
+export type FormErrors = Partial<Record<keyof Omit<Task, "id">, string>>;
+export type ValidateFn = (values: Omit<Task, "id">) => FormErrors;
 
 export interface Task {
   id: string;
