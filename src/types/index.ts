@@ -55,3 +55,8 @@ export const TaskStatusEnum = {
   InProgress: "in-progress",
   Completed: "completed",
 } as const;
+
+export interface SearchbarProps {
+  onSearch: (value: string) => void;
+  value: string;
+}

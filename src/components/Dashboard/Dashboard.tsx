@@ -1,26 +1,20 @@
 import * as React from "react";
 import { useMemo, useState } from "react";
-import type { Task, TaskPriority, TaskStatus } from "../../types";
+import type { PriorityStatus, Task, TaskStatus } from "../../types";
 import TaskFilter from "../TaskFilter/TaskFilter";
 import TaskForm from "../TaskForm/TaskForm";
+import Searchbar from "../TaskList/Searchbar";
 import { TaskList } from "../TaskList/TaskList";
 
 const Dashboard: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>(taskList);
   const [isAddNewTask, setIsAddNewTask] = useState<boolean>(false);
-  // const [filters, setFilters] = useState<FilterState>({
-  //   status: "all",
-  //   priority: "all",
-  //   search: "",
-  //   sortBy: "createdAt",
-  //   sortOrder: "asc",
-  // });
-
+  const [search, setSearch] = useState<string>("");
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   const [filters, setFilters] = useState<{
     status?: TaskStatus;
-    priority?: TaskPriority;
+    priority?: PriorityStatus;
   }>({});
 
   const onStatusChange = (taskId: string, newStatus: TaskStatus) => {
@@ -57,12 +51,21 @@ const Dashboard: React.FC = () => {
         if (filters.status && task.status !== filters.status) return false;
         if (filters.priority && task.priority !== filters.priority)
           return false;
+
+        if (
+          search &&
+          !task.title.toLowerCase().includes(search.toLowerCase()) &&
+          !task.description.toLowerCase().includes(search.toLowerCase())
+        ) {
+          return false;
+        }
+
         return true;
       })
       .sort((a, b) => {
         return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
       });
-  }, [tasks, filters]);
+  }, [tasks, filters, search]);
 
   return (
     <div className="w-full flex items-start justify-center h-full flex-col">
@@ -80,7 +83,10 @@ const Dashboard: React.FC = () => {
           />
         ) : (
           <div className="w-full flex items-center justify-center h-full flex-col">
-            <TaskFilter onFilterChange={setFilters} />
+            <div className="flex items-center justify-between w-[80%]">
+              <TaskFilter onFilterChange={setFilters} />
+              <Searchbar value={search} onSearch={setSearch} />
+            </div>
 
             {filteredTasks.length === 0 ? (
               <p className="text-Red400 font-bold text-5xl">No tasks found.</p>
@@ -107,7 +113,7 @@ const taskList: Task[] = [
     id: "1",
     priority: "low",
     status: "completed",
-    title: "lorem",
+    title: "saba",
   },
   {
     description: "lorem ipsum",
@@ -118,7 +124,7 @@ const taskList: Task[] = [
     title: "ipsum",
   },
   {
-    description: "lorem ipsum",
+    description: "saba",
     dueDate: "2026-06-05",
     id: "3",
     priority: "medium",

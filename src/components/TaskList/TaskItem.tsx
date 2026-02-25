@@ -32,7 +32,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
       >
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-lg font-semibold">task {task.id}</h3>
+            <h3 className="text-lg font-semibold">{task.title}</h3>
             <p className="text-Black100"> {task.description}</p>
           </div>
 

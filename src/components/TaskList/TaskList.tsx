@@ -18,7 +18,7 @@ export const TaskList = ({
   }, [tasks, sortAscending]);
 
   return (
-    <div className="flex flex-col items-start justify-start w-[80%] gap-4 overflow-auto">
+    <div className="flex flex-col items-start justify-start w-[80%] gap-4 overflow-auto pt-2.5">
       {sortedTasks.map((element) => (
         <div key={element.id} className="w-full">
           <TaskItem
@@ -30,7 +30,7 @@ export const TaskList = ({
       ))}
       <button
         onClick={() => setSortAscending((prev) => !prev)}
-        className="cursor-pointer text-blue-500 hover:text-blue-700 fixed bottom-4 left-[10%] z-40"
+        className="cursor-pointer text-blue-500 hover:text-blue-700 fixed bottom-7 left-[10%] z-40"
       >
         Sort by Due Date {sortAscending ? "Ascending" : "Descending"}
       </button>
