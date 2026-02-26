@@ -1,31 +1,6 @@
 import * as React from "react";
 import type { FormErrors, Task, TaskFormProps } from "../../types";
-
-const validate = (values: Omit<Task, "id">): FormErrors => {
-  const errors: FormErrors = {};
-
-  if (!values.title) {
-    errors.title = "Title is required!";
-  }
-
-  if (!values.description) {
-    errors.description = "Description is required!";
-  }
-
-  if (!values.dueDate) {
-    errors.dueDate = "Due date is required!";
-  }
-
-  if (!values.priority) {
-    errors.priority = "Priority is required!";
-  }
-
-  if (!values.status) {
-    errors.status = "Status is required!";
-  }
-
-  return errors;
-};
+import { validateTask } from "../../utils/taskUtils";
 
 const TaskForm: React.FC<TaskFormProps> = ({
   onAddNewTask,
@@ -50,14 +25,14 @@ const TaskForm: React.FC<TaskFormProps> = ({
     const updatedFormData = { ...formData, [name]: value };
     setFormData(updatedFormData);
 
-    setErrors(validate(updatedFormData));
+    setErrors(validateTask(updatedFormData));
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setErrors(validate(formData));
+    setErrors(validateTask(formData));
 
-    if (!Object.keys(validate(formData)).length) {
+    if (!Object.keys(validateTask(formData)).length) {
       onAddNewTask(formData);
       onAddNewTaskClick();
     }
@@ -70,7 +45,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
   ) => {
     e.preventDefault();
 
-    const nextErrors = validate(formData);
+    const nextErrors = validateTask(formData);
     setErrors(nextErrors);
   };
 
@@ -78,7 +53,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
     <>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-start justify-start w-[50%] bg-white px-9 py-12 rounded-2xl shadow-2xl gap-5"
+        className="flex flex-col items-start justify-start sm:w-[50%] w-[90%] bg-white px-9 py-12 rounded-2xl shadow-2xl gap-5"
       >
         <div className="flex flex-col items-start justify-start gap-1 w-full">
           <input

@@ -44,14 +44,6 @@ export interface TaskFormErrors {
   dueDate?: string;
 }
 
-export interface FilterState {
-  status: TaskStatus | "all";
-  priority: PriorityStatus | "all";
-  search: string;
-  sortBy: "createdAt" | "dueDate" | "priority";
-  sortOrder: "asc" | "desc";
-}
-
 export const TaskStatusEnum = {
   Pending: "pending",
   InProgress: "in-progress",
@@ -62,3 +54,27 @@ export interface SearchbarProps {
   onSearch: (value: string) => void;
   value: string;
 }
+
+export interface FilterStatusProps {
+  filters: {
+    status?: TaskStatus;
+    priority?: PriorityStatus;
+  };
+  search?: string;
+}
+
+export interface TaskStatsProps {
+  total: number;
+  completed: number;
+  pending: number;
+  inProgress: number;
+}
+
+export interface TaskFilters {
+  status?: TaskStatus;
+  priority?: PriorityStatus;
+  search?: string;
+}
+
+export type SortBy = "dueDate" | "priority" | "title";
+export type SortOrder = "asc" | "desc";

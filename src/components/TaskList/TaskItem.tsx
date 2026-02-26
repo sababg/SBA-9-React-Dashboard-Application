@@ -28,7 +28,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
   return (
     <>
       <div
-        className={`p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow hover:-translate-y-0.5 active:translate-0 active:shadow-olive-500 ${task.status === TaskStatusEnum.Completed ? "opacity-60" : "opacity-100"} ${task.status === TaskStatusEnum.Pending ? "border-l-8 border-yellow-600" : task.status === TaskStatusEnum.InProgress ? "border-l-8 border-blue-800" : "border-l-8 border-green-800"}`}
+        className={`sm:p-4 p-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow hover:-translate-y-0.5 active:translate-0 active:shadow-olive-500 ${task.status === TaskStatusEnum.Completed ? "opacity-60" : "opacity-100"} ${task.status === TaskStatusEnum.Pending ? "border-l-8 border-yellow-600" : task.status === TaskStatusEnum.InProgress ? "border-l-8 border-blue-800" : "border-l-8 border-green-800"}`}
       >
         <div className="flex justify-between items-start">
           <div>
@@ -36,11 +36,11 @@ export const TaskItem: React.FC<TaskItemProps> = ({
             <p className="text-Black100"> {task.description}</p>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex sm:gap-2 gap-0.5">
             <select
               value={task.status}
               onChange={handleChange}
-              className={`px-2 focus:outline-none cursor-pointer py-1 rounded bg-Green50 mx-2 ${statusColor[task.status]}`}
+              className={`px-2 focus:outline-none cursor-pointer py-1 rounded bg-Green50 sm:text-xl text-xs mx-2 ${statusColor[task.status]}`}
             >
               <option value="pending">Pending</option>
               <option value="in-progress">In Progress</option>
@@ -48,7 +48,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
             </select>
 
             <button
-              className="text-Red400 hover:text-red-700 cursor-pointer py-2 px-3"
+              className="text-Red400 hover:text-red-700 cursor-pointer py-2 px-3 sm:text-xl text-xs"
               onClick={() => onDelete(task.id)}
             >
               Delete

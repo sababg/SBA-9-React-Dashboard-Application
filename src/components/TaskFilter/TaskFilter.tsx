@@ -1,20 +1,31 @@
+import React from "react";
 import type { PriorityStatus, TaskFilterProps, TaskStatus } from "../../types";
 
 const TaskFilter = ({ onFilterChange }: TaskFilterProps) => {
+  const [filter, setFilter] = React.useState<{
+    status: string;
+    priority: string;
+  }>({ status: "", priority: "" });
   const handleChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
     data: string,
   ) => {
-    if (data === "status")
+    if (data === "status") {
+      setFilter((prev) => ({ ...prev, priority: "", status: e.target.value }));
       onFilterChange({ status: e.target.value as TaskStatus });
-    else {
+    } else {
       onFilterChange({ priority: e.target.value as PriorityStatus });
+      setFilter((prev) => ({
+        ...prev,
+        priority: e.target.value,
+        status: "e.target.value",
+      }));
     }
   };
 
   return (
     <>
-      <div className="flex gap-4 p-4 w-[80%] justify-start">
+      <div className="flex gap-4 sm:p-4 sm:w-[80%] w-[90%] justify-start p-0">
         <div>
           <label
             htmlFor="status-filter"
@@ -23,6 +34,8 @@ const TaskFilter = ({ onFilterChange }: TaskFilterProps) => {
             Status
           </label>
           <select
+            name="status"
+            value={filter.status}
             id="status-filter"
             onChange={(e) => handleChange(e, "status")}
             className="bg-Green50 px-2 py-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none "
@@ -47,6 +60,8 @@ const TaskFilter = ({ onFilterChange }: TaskFilterProps) => {
             Priority
           </label>
           <select
+            name="priority"
+            value={filter.priority}
             id="priority-filter"
             onChange={(e) => handleChange(e, "priority")}
             className="bg-Green50 px-2 py-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-white focus:outline-none focus:ring-white"
