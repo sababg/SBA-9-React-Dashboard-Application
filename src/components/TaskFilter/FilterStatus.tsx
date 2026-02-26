@@ -14,6 +14,7 @@ const statusColor = {
 };
 
 const FilterStatus: React.FC<FilterStatusProps> = ({ filters, search }) => {
+  //show the current filter and searched data
   return (
     <div className="flex gap-2 my-3 items-center justify-start sm:w-[80%] w-[90%]">
       {filters.status && (

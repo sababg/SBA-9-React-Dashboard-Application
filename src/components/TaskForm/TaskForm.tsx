@@ -3,6 +3,7 @@ import type { FormErrors, Task, TaskFormProps } from "../../types";
 import { validateTask } from "../../utils/taskUtils";
 
 const TaskForm: React.FC<TaskFormProps> = ({
+  // form for adding task
   onAddNewTask,
   onAddNewTaskClick,
 }) => {
@@ -16,6 +17,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
   const [errors, setErrors] = React.useState<FormErrors>({});
 
   const handleChange = (
+    // change inputs data
     event: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
@@ -28,6 +30,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
     setErrors(validateTask(updatedFormData));
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    // check if it has no error add new task
     event.preventDefault();
 
     setErrors(validateTask(formData));
@@ -39,6 +42,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
   };
 
   const handleInvalid = (
+    // check inputs error
     e: React.InvalidEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,

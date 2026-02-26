@@ -2,6 +2,7 @@ import * as React from "react";
 import type { SearchbarProps } from "../../types";
 
 const Searchbar: React.FC<SearchbarProps> = ({ onSearch, value }) => {
+  // search data
   return (
     <>
       <input

@@ -1,12 +1,7 @@
-import type {
-  FormErrors,
-  SortBy,
-  SortOrder,
-  Task,
-  TaskFilters,
-} from "../types";
+import type { FormErrors, SortOrder, Task, TaskFilters } from "../types";
 
 export const filterTasks = (tasks: Task[], filters: TaskFilters): Task[] => {
+  // filter task
   return tasks.filter((task) => {
     if (filters.status && task.status !== filters.status) return false;
     if (filters.priority && task.priority !== filters.priority) return false;
@@ -24,25 +19,17 @@ export const filterTasks = (tasks: Task[], filters: TaskFilters): Task[] => {
   });
 };
 
-export const sortTasks = (
-  tasks: Task[],
-  sortBy: SortBy,
-  order: SortOrder = "asc",
-): Task[] => {
+export const sortTasks = (tasks: Task[], order: SortOrder = "asc"): Task[] => {
+  //sort task
   const sorted = [...tasks].sort((a, b) => {
-    switch (sortBy) {
-      case "dueDate":
-        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
-
-      default:
-        return 0;
-    }
+    return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
   });
 
   return order === "desc" ? sorted.reverse() : sorted;
 };
 
 export const validateTask = (values: Omit<Task, "id">): FormErrors => {
+  // form validation
   const errors: FormErrors = {};
 
   if (!values.title.trim()) {

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useMemo, useState } from "react";
+import { useDownloadFile } from "../../hook/filesDownloaderHook";
 import type { PriorityStatus, Task, TaskStatus } from "../../types";
 import { loadTasksFromStorage, saveTasksToStorage } from "../../utils/storage";
 import { filterTasks } from "../../utils/taskUtils";
@@ -11,23 +12,25 @@ import { TaskList } from "../TaskList/TaskList";
 import { TaskStats } from "../TaskStats/TaskStats";
 
 const Dashboard: React.FC = () => {
+  const downloadFile = useDownloadFile(); // custom hook for download
+
   const [tasks, setTasks] = useState<Task[]>(() => {
-    const stored = loadTasksFromStorage();
+    const stored = loadTasksFromStorage(); // for reading data from local storage
     return stored.length ? stored : taskList;
   });
-  const [isAddNewTask, setIsAddNewTask] = useState<boolean>(false);
+  const [isAddNewTask, setIsAddNewTask] = useState<boolean>(false); // for showing the form
   const [search, setSearch] = useState<string>("");
-  const [theme, setTheme] = useState<"light" | "dark">("light");
   const [filters, setFilters] = useState<{
     status?: TaskStatus;
     priority?: PriorityStatus;
   }>({});
 
   React.useEffect(() => {
-    saveTasksToStorage(tasks);
+    saveTasksToStorage(tasks); // adding data to localstorage
   }, [tasks]);
 
   const onStatusChange = (taskId: string, newStatus: TaskStatus) => {
+    // task status change
     setTasks((prev) =>
       prev.map((element) =>
         element.id === taskId
@@ -41,6 +44,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleAddNewTask = (task: Omit<Task, "id">) => {
+    // add new task
     const newTask: Task = {
       id: crypto.randomUUID(),
       ...task,
@@ -49,21 +53,25 @@ const Dashboard: React.FC = () => {
   };
 
   const onDelete = (taskId: string) => {
+    // delete task
     setTasks((prev) => prev.filter((element) => taskId !== element.id));
   };
 
   const onAddNewTaskClick = () => {
+    // show form
     setIsAddNewTask((prev) => !prev);
   };
 
   const filteredTasks = useMemo(() => {
     return filterTasks(tasks, {
+      // filter tasks based on searched data and status or priority
       ...filters,
       search,
     });
   }, [tasks, filters, search]);
 
   const stats = useMemo(() => {
+    // number of each status
     const total = tasks.length;
     const completed = tasks.filter((t) => t.status === "completed").length;
     const pending = tasks.filter((t) => t.status === "pending").length;
@@ -72,14 +80,28 @@ const Dashboard: React.FC = () => {
     return { total, completed, pending, inProgress };
   }, [tasks]);
 
+  const handleExportTasks = () => {
+    // download task in JSON form
+    const json = JSON.stringify(tasks, null, 2);
+    const url = `data:text/json;charset=utf-8,${encodeURIComponent(json)}`;
+
+    downloadFile(url, "tasks.json");
+  };
+
   return (
     <div className="w-full flex items-center justify-center h-full flex-col">
-      <header className="w-[90%] sm:w-full">
+      <header className="w-[90%] sm:w-full flex items-center sm:justify-start justify-between">
         <button
           onClick={() => onAddNewTaskClick()}
           className="bg-white text-black px-3 py-5 sm:mx-4 mx-0 my-5 cursor-pointer rounded-2xl"
         >
           {isAddNewTask ? "Show Tasks" : "Add New Task"}
+        </button>
+        <button
+          onClick={handleExportTasks}
+          className="bg-white text-black px-3 py-5 sm:mx-4 mx-0 my-5 cursor-pointer rounded-2xl"
+        >
+          Download Tasks
         </button>
       </header>
       <main className="w-full h-[80%] overflow-hidden flex items-center justify-center flex-col">

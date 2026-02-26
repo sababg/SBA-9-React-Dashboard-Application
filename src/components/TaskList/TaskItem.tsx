@@ -17,6 +17,7 @@ const statusColor = {
 };
 
 export const TaskItem: React.FC<TaskItemProps> = ({
+  // show each task
   task,
   onStatusChange,
   onDelete,

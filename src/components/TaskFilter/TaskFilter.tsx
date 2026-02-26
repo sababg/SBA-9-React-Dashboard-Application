@@ -2,11 +2,14 @@ import React from "react";
 import type { PriorityStatus, TaskFilterProps, TaskStatus } from "../../types";
 
 const TaskFilter = ({ onFilterChange }: TaskFilterProps) => {
+  // Filter task list based on status or priority
   const [filter, setFilter] = React.useState<{
     status: string;
     priority: string;
   }>({ status: "", priority: "" });
+
   const handleChange = (
+    // If user wants to filter based on status, the priority must be all or reverse.
     e: React.ChangeEvent<HTMLSelectElement>,
     data: string,
   ) => {

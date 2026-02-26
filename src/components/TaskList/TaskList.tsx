@@ -4,6 +4,7 @@ import { sortTasks } from "../../utils/taskUtils";
 import { TaskItem } from "./TaskItem";
 
 export const TaskList = ({
+  // Show list of tasks
   onDelete,
   onStatusChange,
   tasks,
@@ -11,7 +12,8 @@ export const TaskList = ({
   const [sortAscending, setSortAscending] = useState(true);
 
   const sortedTasks = useMemo(() => {
-    return sortTasks(tasks, "dueDate", sortAscending ? "asc" : "desc");
+    // sort data
+    return sortTasks(tasks, sortAscending ? "asc" : "desc");
   }, [tasks, sortAscending]);
 
   return (
@@ -27,7 +29,7 @@ export const TaskList = ({
           </div>
         ))}
       </div>
-      <button
+      <button // filter by due date
         onClick={() => setSortAscending((prev) => !prev)}
         className="cursor-pointer text-blue-500 hover:text-blue-700 z-40"
       >

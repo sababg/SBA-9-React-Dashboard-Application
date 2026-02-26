@@ -1,6 +1,7 @@
 import type { TaskStatsProps } from "../../types";
 
 export const TaskStats: React.FC<TaskStatsProps> = ({
+  // show the count of each status task
   total,
   completed,
   pending,
